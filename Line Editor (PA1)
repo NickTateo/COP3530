@@ -1,0 +1,413 @@
+#include <iostream>
+#include <string>
+#define CHAROFFSET 48
+
+using namespace std;
+
+class Node
+{
+    private:
+    public:
+        Node * next;
+        string linevalue;
+
+        Node(string);
+        ~Node();
+};
+
+Node::Node(string inputline)
+{
+    next = nullptr;
+    linevalue = inputline;
+}
+
+Node::~Node(){}
+
+class LinkedList
+{
+    private:
+    public:
+        Node * head;
+
+        LinkedList();
+        void appendNode(string);
+        bool deleteNode(int);
+        bool insertNode(string, int);
+        void printList();
+        bool replaceNodeValue(string, int);
+        void searchList(string);
+};
+
+LinkedList::LinkedList()
+{
+    head = nullptr;
+}
+
+void LinkedList::appendNode(string insertVal)
+{
+    Node * newNode = new Node(insertVal);
+
+    if(head == nullptr)
+    {
+        head = newNode;
+    }
+    else
+    {
+        Node * current = head;
+        while(current->next != nullptr)
+        {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+bool LinkedList::insertNode(string insertVal, int index)
+{
+    Node * newNode = new Node(insertVal);
+
+    if(index == 1)
+    {
+        newNode->next = head;
+        head = newNode;
+    }
+    else
+    {
+        if(head == nullptr){return false;}
+        else
+        {
+            Node * current = head;
+            for(int i = 1; i < (index-1); i++)
+            {
+                current = current->next;
+            }
+            if(current->next == nullptr)
+            {
+                current->next = newNode;
+            }
+            else
+            {
+                newNode->next = current->next;
+                current->next = newNode;
+            }
+        }
+    }
+    return true;
+}
+
+bool LinkedList::deleteNode(int index)
+{
+    if(head != nullptr)
+    {
+        Node * current = head;
+        if(index == 1)
+        {
+            if(current->next == nullptr)
+            {
+                delete current;
+                head = nullptr;
+                return true;
+            }
+            else
+            {
+                head = current->next;
+                delete current;
+                return true;
+            }
+        }
+        else
+        {
+            int counter = 1;
+            while(counter < (index-1))
+            {
+                if(current->next == nullptr){return false;}
+                else
+                {
+                    current = current->next;
+                    counter++;
+                }
+            }
+            if(current->next != nullptr)
+            {
+                if(current->next->next != nullptr)
+                {
+                    Node * temp = current->next;
+                    current->next = current->next->next;
+                    delete temp;
+                }
+                else
+                {
+                    delete current->next;
+                    current->next = nullptr;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool LinkedList::replaceNodeValue(string insertVal, int index)
+{
+    if(head != nullptr)
+    {
+        Node * current = head;
+        int counter = 1;
+        while(counter < index)
+        {
+            if(current->next == nullptr){return false;}
+            else
+            {
+                current = current->next;
+                counter++;
+            }
+        }
+        current->linevalue = insertVal;
+        return true;
+    }
+    return false;
+}
+
+void LinkedList::searchList(string searchText)
+{
+    if(head != nullptr)
+    {
+        bool didPrint = false;
+        Node * current = head;
+        int lineCounter = 1;
+
+        while(current != nullptr)
+        {
+            if(current->linevalue.find(searchText) != string::npos)
+            {
+                cout << lineCounter << " " << current->linevalue << "\n";
+                didPrint = true;
+            }
+            current = current->next;
+            lineCounter++;
+        }
+        if(!didPrint){cout << "not found\n";}
+    }
+    else
+    {
+        cout << "not found\n";
+    }
+}
+
+void LinkedList::printList()
+{
+    if(head != nullptr)
+    {
+        if(head->next == nullptr)
+        {
+            cout << 1 << " " << head->linevalue << '\n';
+        }
+        else
+        {
+            int lineCounter = 1;
+            Node * current = head;
+
+            cout << lineCounter << " " << current->linevalue << '\n';
+            do
+            {
+                lineCounter++;
+                current = current->next;
+                cout << lineCounter << " " << current->linevalue << '\n';
+            }while(current->next != nullptr);
+        }
+    }
+}
+
+class LineEditor
+{
+    private:
+        LinkedList document;
+        bool receiveCommand();
+        void insertAtIndex(string, int);
+        void insertAtEnd(string);
+        void deleteAtIndex(int);
+        void replaceLine(string, int);
+        void searchForText(string);
+
+    public:
+        LineEditor();
+};
+
+LineEditor::LineEditor()
+{
+    while(receiveCommand()){};
+}
+
+bool LineEditor::receiveCommand()
+{
+    string command = "";
+    string text = "";
+    int index;
+
+    cin >> command;
+
+    if(command == "insertEnd")
+    {
+        while(cin.peek() == ' ')
+        {
+            cin.ignore(1);
+        }
+        getline(cin, text, '\n');
+
+        insertAtEnd(text);
+    }
+    else if(command == "insert")
+    {
+        while(cin.peek() == ' ')
+        {
+            cin.ignore(1);
+        }
+
+        if(isdigit(cin.peek()))
+        {
+            try
+            {
+                cin >> index;
+                if(cin.peek() == ' ')
+                {
+                    while(cin.peek() == ' ')
+                    {
+                        cin.ignore(1);
+                    }
+                    getline(cin, text, '\n');
+
+                    insertAtIndex(text, index);
+                }
+            }
+            catch(exception e)
+            {
+                cin.clear();
+                cin.ignore(10000, '\n');
+            }
+        }
+    }
+    else if(command == "delete")
+    {
+        while(cin.peek() == ' ')
+        {
+            cin.ignore(1);
+        }
+
+        if(isdigit(cin.peek()))
+        {
+            try
+            {
+                cin >> index;
+                if(cin.peek() == '\n')
+                {
+                    deleteAtIndex(index);
+                }
+            }
+            catch(exception e)
+            {
+                cin.clear();
+                cin.ignore(10000, '\n');
+            }
+        }
+    }
+    else if(command == "edit")
+    {
+        while(cin.peek() == ' ')
+        {
+            cin.ignore(1);
+        }
+
+        if(isdigit(cin.peek()))
+        {
+            try
+            {
+                cin >> index;
+                if(cin.peek() == ' ')
+                {
+                    while(cin.peek() == ' ')
+                    {
+                        cin.ignore(1);
+                    }
+                    getline(cin, text, '\n');
+
+                    replaceLine(text, index);
+                }
+            }
+            catch(exception e)
+            {
+                cin.clear();
+                cin.ignore(10000, '\n');
+            }
+        }
+    }
+    else if(command == "print")
+    {
+        document.printList();
+    }
+    else if(command == "search")
+    {
+        while(cin.peek() == ' ')
+        {
+            cin.ignore(1);
+        }
+        getline(cin, text, '\n');
+
+        searchForText(text);
+    }
+    else if(command == "quit")
+    {
+        return false;
+    }
+    else
+    {
+        cin.clear();
+        cin.ignore(10000, '\n');
+    }
+}
+
+void LineEditor::insertAtIndex(string userText, int userIndex)
+{
+    if(userText.length() > 1 && userText.substr(0,1) == "\"" && userText.substr((userText.length()-1), 1) == "\"" && userIndex > 0)
+    {
+        document.insertNode(userText.substr(1, (userText.length()-2)), userIndex);
+    }
+}
+
+void LineEditor::insertAtEnd(string userText)
+{
+    if(userText.length() > 1 && userText.substr(0,1) == "\"" && userText.substr((userText.length()-1), 1) == "\"")
+    {
+        document.appendNode(userText.substr(1, (userText.length()-2)));
+    }
+}
+
+void LineEditor::deleteAtIndex(int userIndex)
+{
+    if(userIndex > 0)
+    {
+        document.deleteNode(userIndex);
+    }
+}
+
+void LineEditor::replaceLine(string userText, int userIndex)
+{
+    if(userText.length() > 1 && userText.substr(0,1) == "\"" && userText.substr((userText.length()-1), 1) == "\"" && userIndex > 0)
+    {
+        document.replaceNodeValue(userText.substr(1, (userText.length()-2)), userIndex);
+    }
+}
+
+void LineEditor::searchForText(string userText)
+{
+    if(userText.length() > 1 && userText.substr(0,1) == "\"" && userText.substr((userText.length()-1), 1) == "\"")
+    {
+        document.searchList(userText.substr(1, (userText.length()-2)));
+    }
+}
+
+int main()
+{
+
+    LineEditor();
+
+    return 0;
+}
