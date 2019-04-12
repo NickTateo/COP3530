@@ -7,4 +7,4 @@ PA1: Basic text editor using a linked list
 
 PA2: Simplified version of Google's PageRank algorithm
 
-PA3: Analysis of collisions vs. load factor with hash tables using different combinations of hash algorithm and collision resolution strategy
+Hashing Analysis: Analysis of collisions vs. load factor with hash tables using different combinations of hash algorithm and collision resolution strategy
