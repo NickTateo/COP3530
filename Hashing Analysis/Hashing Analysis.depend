@@ -1,0 +1,35 @@
+# depslib dependency file v1.0
+1540958356 source:c:\users\nick\desktop\code\data structures\hashing analysis\main.cpp
+	"ChainingMap.h"
+	"OpenAddressingMap.h"
+
+1540957781 source:c:\users\nick\desktop\code\data structures\hashing analysis\hashmap.cpp
+	"HashMap.h"
+
+1540888270 c:\users\nick\desktop\code\data structures\hashing analysis\hashmap.h
+	"HashNode.h"
+	<iostream>
+	<iomanip>
+	<cmath>
+	<random>
+	<string>
+	<bitset>
+
+1540886056 source:c:\users\nick\desktop\code\data structures\hashing analysis\chainingmap.cpp
+	"ChainingMap.h"
+
+1540872782 c:\users\nick\desktop\code\data structures\hashing analysis\chainingmap.h
+	"HashMap.h"
+
+1540888270 source:c:\users\nick\desktop\code\data structures\hashing analysis\openaddressingmap.cpp
+	"OpenAddressingMap.h"
+
+1540870796 c:\users\nick\desktop\code\data structures\hashing analysis\openaddressingmap.h
+	"HashMap.h"
+
+1540818076 source:c:\users\nick\desktop\code\data structures\hashing analysis\hashnode.cpp
+	"HashNode.h"
+
+1540808935 c:\users\nick\desktop\code\data structures\hashing analysis\hashnode.h
+	<iostream>
+
